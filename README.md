@@ -13,7 +13,7 @@ sudo dd if=/dev/sdb of=/mnt/evidence/dysk.img bs=4M conv=noerror,sync status=pro
 sudo dcfldd if=/dev/sdb of=/mnt/evidence/dysk.img hash=sha256 hashlog=hash.txt bs=4M conv=noerror,sync
 ```
 
-Typ nośnika
+## Typ nośnika
 
 SSD / NVMe:
 - zwykle większe bs (4–16M)
@@ -23,7 +23,7 @@ HDD:
 - optymalnie 1–4M
 - zbyt duże bs może spowolnić przy błędach.
 
-Interfejs
+## Interfejs
 - USB 2.0 → mniejsze bs stabilniejsze
 - USB 3.x / SATA / NVMe → większe bs OK.
 
@@ -35,3 +35,16 @@ Dlatego często:
 bs=512K lub 1M
 conv=noerror,sync.
 ```
+## Duże obrazy (500 GB – kilka TB)
+```bash
+sudo dd if=/dev/sdb of=/mnt/evidence/dysk.img \
+bs=4M conv=noerror,sync oflag=direct status=progress
+```
+## Uwaga techniczna
+
+oflag=direct wymaga:
+- aby bs był wielokrotnością rozmiaru bloku systemu plików (zwykle 512 B lub 4K).
+
+Dlatego:
+👉 bs=4M działa dobrze,
+👉 bs=1000 może się wywalić.
